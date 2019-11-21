@@ -49,20 +49,19 @@ const getPokeImage = x => {
   return wihtImg;
 };
 
-const getPoke = async x => {
+const getPoke = async rx => {
   // get the details of a pokemon based on the name aka filter
   const resp = await axios
     .get("https://pokeapi.co/api/v2/pokemon/?limit=3000")
     .then(x => x.data.results);
   // console.log(resp);
-  return resp.filter(_ => _.name.startsWith(x));
+  return resp.filter(_ => _.name.startsWith(rx));
 };
 
 const useObservable = (obs$, setter) => {
   useEffect(() => {
     const mysub = obs$.subscribe(x => {
       setter(x);
-      // console.log(x);
     });
     return () => mysub.unsubscribe();
   }, [obs$, setter]);
@@ -77,13 +76,10 @@ function App() {
   const [results, setResults] = useState([]);
 
   useObservable(helloadded$, setX);
-  // useObservable(search$, setSearch);
   useObservable(searchPipe$, setResults);
 
   return (
     <div className="App">
-      {/* <div>{x}</div> */}
-
       <div className="box fc">
         <div className="title1 fr-sb">
           <h2>PokeMon - RxJs + React</h2>
@@ -92,7 +88,7 @@ function App() {
           type="text"
           onChange={e => {
             setSearch(e.target.value);
-            search$.next(e.target.value);
+            search$.next(e.target.value.toLowerCase());
           }}
           value={search}
           placeholder="type pokemon name"
